@@ -9,40 +9,61 @@ import type { UserCredential } from "firebase/auth";
 import { auth, provider } from "../utils/firebase";
 import { ServerUrl } from "../App";
 import axios from "axios";
-const Auth: FC = () => {
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
+import { useNavigate } from "react-router-dom";
+
+interface AuthProps {
+  isModal?: boolean;
+}
+
+const Auth: FC<AuthProps> = ({ isModal = false }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleGoogleAuth = async (): Promise<void> => {
     console.log("Google login clicked");
-  try {
-    const response: UserCredential = await signInWithPopup(auth, provider);
 
-    const user = response.user;
-    console.log(response);
-    if (!user.email || !user.displayName) {
-      throw new Error("Google account missing required profile info");
+    try {
+      const response: UserCredential = await signInWithPopup(auth, provider);
+
+      const user = response.user;
+      console.log(response);
+      if (!user.email || !user.displayName) {
+        throw new Error("Google account missing required profile info");
+      }
+
+      const name: string = user.displayName;
+      const email: string = user.email;
+
+      const result = await axios.post(
+        `${ServerUrl}/api/auth/google`,
+        { name, email },
+        { withCredentials: true },
+      );
+
+      dispatch(setUserData(result.data.user));
+
+      if (!isModal) {
+        navigate("/");
+      }
+
+      //console.log(result.data);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        dispatch(setUserData(null));
+      } else {
+        console.error("Unknown authentication error", error);
+      }
     }
-
-    const name: string = user.displayName;
-    const email: string = user.email;
-
-    const result = await axios.post(
-      `${ServerUrl}/api/auth/google`,
-      { name, email },
-      { withCredentials: true }
-    );
-
-    console.log(result.data);
-
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error("Unknown authentication error", error);
-    }
-  }
-};
+  };
 
   return (
-    <div className="w-full min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20">
+    <div
+      className={`w-full flex items-center justify-center ${
+        isModal ? "" : "min-h-screen bg-[#f3f3f3] px-6 py-20"
+      }`}
+    >
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}

@@ -18,7 +18,7 @@ const App = () => {
         const res = await axios.get(`${ServerUrl}/api/user/current-user`,{
           withCredentials: true
         })
-        dispatch(setUserData(res.data))
+        dispatch(setUserData(res.data.user))
         
         console.log(res.data)
       } catch (error) {
@@ -29,7 +29,7 @@ const App = () => {
     }
 
     getUser();
-  },[])
+  },[dispatch])
   return (
      <Routes>
       <Route path='/' element={<Home />} />

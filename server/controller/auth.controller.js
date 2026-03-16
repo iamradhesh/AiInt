@@ -45,6 +45,7 @@ export const logOut = async (req, res) => {
       httpOnly: true,
       sameSite: "lax",
       secure: false,
+      path: "/",
     });
     res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
