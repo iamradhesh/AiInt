@@ -1,8 +1,13 @@
 import React from 'react'
 
-const InterviewStep3 = ({report}) => {
+import type {  InterviewReport } from "../types/Interview";
+
+interface InterviewStep3Props {
+  report: InterviewReport
+}
+const InterviewStep3 = ({report}: InterviewStep3Props) => {
   return (
-    <div>
+    <div className=''>
       
     </div>
   )

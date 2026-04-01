@@ -1,20 +1,30 @@
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { features } from "../data/Feature";
-import { FaBriefcase, FaFileUpload, FaUserTie } from "react-icons/fa";
+import { FaBriefcase, FaUserTie } from "react-icons/fa";
 import ModeSelect from "./ModeSelect";
 import ResumeUploader from "./ResumeUploader";
 import AnalyzeButton from "./AnalyzeButton";
 import axios from "axios";
 import { ServerUrl } from "../App";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../types/user";
+import { setUserData } from "../redux/userSlice";
+import type { InterviewSetup } from "../types/Interview";
 
+//Helper Utility:-
 const fadeSlide = (x: number, delay: number) => ({
   initial: { x, opacity: 0 },
   animate: { x: 0, opacity: 1 },
   transition: { duration: 0.7, delay },
 });
 
-const InterviewStep1 = ({ onStart }) => {
+
+const InterviewStep1 = ({
+  onStart,
+}: {
+  onStart: (data: InterviewSetup) => void;
+}) => {
   const [role, setRole] = React.useState("");
   const [experience, setExperience] = React.useState("");
   const [mode, setMode] = React.useState("");
@@ -27,6 +37,8 @@ const InterviewStep1 = ({ onStart }) => {
   const [analyzing, setAnalyzing] = useState(false);
   const [showAllSkills, setShowAllSkills] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
+  const { userData } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
 
   const handleAnalyze = async () => {
     if (!resumeFile || analyzing) return;
@@ -43,7 +55,7 @@ const InterviewStep1 = ({ onStart }) => {
         {
           withCredentials: true,
           headers: { "Content-Type": "multipart/form-data" },
-        }
+        },
       );
 
       setRole(response.data.role || "");
@@ -60,19 +72,60 @@ const InterviewStep1 = ({ onStart }) => {
     }
   };
 
+  const handleStart = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        ServerUrl + "/api/interview/generate-questions",
+        {
+          role,
+          experience,
+          mode,
+          resumeText,
+          projects,
+          skills,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log(response.data);
+
+      if (response) {
+        dispatch(
+          setUserData({
+            ...userData,
+            credits: response.data.user.creditsLeft,
+          }),
+        );
+      }
+      setLoading(false);
+      onStart(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message || "Something went wrong";
+        alert(message);
+      } else {
+        alert("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.7 }}
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 px-4 font-[DM_Sans]"
+      className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-200 px-4 font-[DM_Sans]"
     >
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl grid md:grid-cols-2 overflow-hidden">
-
         {/* LEFT — Features panel */}
         <motion.div
           {...fadeSlide(-100, 0.3)}
-          className="bg-gradient-to-br from-green-50 to-green-100 p-12 flex flex-col justify-center"
+          className="bg-linear-to-br from-green-50 to-green-100 p-12 flex flex-col justify-center"
         >
           <h2 className="text-4xl font-bold text-gray-800 mb-4 font-[Sora]">
             Start Your AI Interview
@@ -93,7 +146,9 @@ const InterviewStep1 = ({ onStart }) => {
                 className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm cursor-pointer"
               >
                 {feature.icon}
-                <span className="text-gray-700 font-medium">{feature.text}</span>
+                <span className="text-gray-700 font-medium">
+                  {feature.text}
+                </span>
               </motion.div>
             ))}
           </div>
@@ -106,7 +161,6 @@ const InterviewStep1 = ({ onStart }) => {
           </h2>
 
           <div className="space-y-6">
-
             {/* Role input */}
             <div className="relative">
               <FaUserTie className="absolute top-4 left-4 text-gray-400" />
@@ -171,7 +225,7 @@ const InterviewStep1 = ({ onStart }) => {
                       {(showAllProjects ? projects : projects.slice(0, 3)).map(
                         (project, i) => (
                           <li key={i}>{project}</li>
-                        )
+                        ),
                       )}
                     </ul>
                     {projects.length > 3 && (
@@ -200,7 +254,7 @@ const InterviewStep1 = ({ onStart }) => {
                           >
                             {skill}
                           </span>
-                        )
+                        ),
                       )}
                       {skills.length > 5 && (
                         <button
@@ -220,18 +274,19 @@ const InterviewStep1 = ({ onStart }) => {
 
             {/* Start Interview button */}
             <motion.button
-              disabled={!role || !experience}
+              onClick={handleStart}
+              disabled={!role || !experience || loading}
               whileHover={{ scale: role && experience ? 1.03 : 1 }}
               whileTap={{ scale: role && experience ? 0.95 : 1 }}
               className={`w-full py-3 rounded-full text-lg font-semibold transition duration-300 shadow-md text-white
-                ${role && experience
-                  ? "bg-green-600 hover:bg-green-700 cursor-pointer"
-                  : "bg-gray-400 cursor-not-allowed"
+                ${
+                  role && experience
+                    ? "bg-green-600 hover:bg-green-700 cursor-pointer"
+                    : "bg-gray-400 cursor-not-allowed"
                 }`}
             >
-              Start Interview
+              {loading && !analyzing ? `Starting...` : `Start Interview`}
             </motion.button>
-
           </div>
         </motion.div>
       </div>
