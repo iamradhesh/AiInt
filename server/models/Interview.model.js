@@ -30,12 +30,18 @@ const questionSchema = new mongoose.Schema(
       default: "",
       maxlength: 2000,
     },
+    improvement: {
+      type: String,
+      default: "",
+      trim: true,
+      maxlength: 300, // keep it concise and actionable
+    },
     score: { type: Number, default: 0, min: 0, max: 100 },
     confidence: { type: Number, default: 0, min: 0, max: 100 },
     communication: { type: Number, default: 0, min: 0, max: 100 },
     correctness: { type: Number, default: 0, min: 0, max: 100 },
   },
-  { _id: false, timestamps: true }
+  { _id: false, timestamps: true },
 );
 
 const interviewSchema = new mongoose.Schema(
@@ -86,7 +92,7 @@ const interviewSchema = new mongoose.Schema(
   {
     timestamps: true,
     strict: "throw",
-  }
+  },
 );
 
 export const Interview = mongoose.model("Interview", interviewSchema);

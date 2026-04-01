@@ -18,6 +18,7 @@ export const isAuth = async(req,res,next)=>{
             return res.status(401).json({message:"Unauthorized"});
         }
         req.user = user;
+        req.userId = user._id; // ✅ add this line
         next();
 
     } catch (error) {
