@@ -45,4 +45,9 @@ export type InterviewReport = {
   feedback: string;
   strengths: string[];
   improvements: string[];
+  finalScore: number;
+  confidence: number;
+  communication: number;
+  correctness: number;
+  questionwiesescore: { question: string; score: number }[];
 };
