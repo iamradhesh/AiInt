@@ -23,7 +23,8 @@
     "mongoose": "^7.0.1",
     "multer": "^2.1.1",
     "nodemon": "^2.0.22",
-    "pdfjs-dist": "^5.5.207"
+    "pdfjs-dist": "^5.5.207",
+    "razorpay": "^2.9.6"
   },
   "devDependencies": {
     "@types/axios": "^0.14.4",
