@@ -1,1 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500&display=swap');
 @import "tailwindcss";
+
+/* Global defaults */
+:root {
+  --font-heading: 'Sora', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+/* Apply body font everywhere automatically */
+body {
+  font-family: var(--font-body);
+}
+
+/* Apply heading font globally */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
