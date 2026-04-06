@@ -11,6 +11,17 @@ export const createOrder = async (req, res) => {
     if (!planId || !amount || !credits) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+    const existingPending = await Payment.findOne({
+      userId: req.userId,
+      planId,
+      status: "created",
+    });
+
+    if (existingPending) {
+      return res.status(400).json({
+        message: "Payment already in progress",
+      });
+    }
 
     const options = {
       amount: amount * 100, // Amount in paise
@@ -74,13 +85,11 @@ export const verifyPayment = async (req, res) => {
       { $inc: { credits: payment.credits } },
       { new: true },
     );
-    res
-      .status(200)
-      .json({
-        Success: true,
-        message: "Payment verified successfully",
-        user: updatedUser,
-      });
+    res.status(200).json({
+      Success: true,
+      message: "Payment verified successfully",
+      user: updatedUser,
+    });
     console.log("Payment verified successfully");
   } catch (error) {
     res.status(500).json({ message: "Error verifying payment" });
