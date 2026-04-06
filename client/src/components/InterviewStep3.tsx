@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaChevronDown } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa6";
 import { GoDownload } from "react-icons/go";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer,
@@ -52,7 +52,11 @@ function getPerformanceTier(score: number) {
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] } }),
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+  }),
 };
 
 // ─── Print Report — simple table layout, zero Tailwind, zero charts ───────────
@@ -239,53 +243,53 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
   );
 };
 
-const QuestionRow: React.FC<{ question: QuestionItem; index: number }> = ({ question, index }) => {
-  const [open, setOpen] = useState(false);
-  const score = question.score ?? 0;
-  return (
-    <div className="border border-gray-100 rounded-xl overflow-hidden">
-      <button onClick={() => setOpen((p) => !p)}
-        className="w-full flex items-center justify-between gap-2 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 text-left">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="shrink-0 text-xs font-bold text-gray-400 w-7">Q{index + 1}</span>
-          <span className="text-sm text-gray-700 font-medium truncate">{question.question ?? "Question not available"}</span>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className={`text-sm font-bold tabular-nums ${scoreColor(score)}`}>{score}<span className="text-xs font-normal text-gray-400">/100</span></span>
-          <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
-            <FaChevronDown className="text-gray-400 w-3 h-3" />
-          </motion.div>
-        </div>
-      </button>
-      <div className="px-4 pb-2">
-        <div className="w-full bg-gray-100 rounded-full h-1 overflow-hidden">
-          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${score}%`, backgroundColor: barFill(score) }} />
-        </div>
-      </div>
-      <AnimatePresence>
-        {open && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
-            <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex flex-col gap-3">
-              {question.answer && (
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Your Answer</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{question.answer}</p>
-                </div>
-              )}
-              {question.feedback && (
-                <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1">AI Feedback</p>
-                  <p className="text-sm text-amber-800 leading-relaxed">{question.feedback}</p>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
+// const QuestionRow: React.FC<{ question: QuestionItem; index: number }> = ({ question, index }) => {
+//   const [open, setOpen] = useState(false);
+//   const score = question.score ?? 0;
+//   return (
+//     <div className="border border-gray-100 rounded-xl overflow-hidden">
+//       <button onClick={() => setOpen((p) => !p)}
+//         className="w-full flex items-center justify-between gap-2 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 text-left">
+//         <div className="flex items-center gap-2 min-w-0">
+//           <span className="shrink-0 text-xs font-bold text-gray-400 w-7">Q{index + 1}</span>
+//           <span className="text-sm text-gray-700 font-medium truncate">{question.question ?? "Question not available"}</span>
+//         </div>
+//         <div className="flex items-center gap-2 shrink-0">
+//           <span className={`text-sm font-bold tabular-nums ${scoreColor(score)}`}>{score}<span className="text-xs font-normal text-gray-400">/100</span></span>
+//           <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
+//             <FaChevronDown className="text-gray-400 w-3 h-3" />
+//           </motion.div>
+//         </div>
+//       </button>
+//       <div className="px-4 pb-2">
+//         <div className="w-full bg-gray-100 rounded-full h-1 overflow-hidden">
+//           <div className="h-full rounded-full transition-all duration-700" style={{ width: `${score}%`, backgroundColor: barFill(score) }} />
+//         </div>
+//       </div>
+//       <AnimatePresence>
+//         {open && (
+//           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
+//             exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
+//             <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex flex-col gap-3">
+//               {question.answer && (
+//                 <div>
+//                   <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Your Answer</p>
+//                   <p className="text-sm text-gray-600 leading-relaxed">{question.answer}</p>
+//                 </div>
+//               )}
+//               {question.feedback && (
+//                 <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+//                   <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1">AI Feedback</p>
+//                   <p className="text-sm text-amber-800 leading-relaxed">{question.feedback}</p>
+//                 </div>
+//               )}
+//             </div>
+//           </motion.div>
+//         )}
+//       </AnimatePresence>
+//     </div>
+//   );
+// };
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -398,7 +402,7 @@ const InterviewStep3: React.FC<InterviewStep3Props> = ({ report }) => {
       </div>
 
       {/* Visible UI — unchanged */}
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50/30 px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
 
         <div className="mb-6 sm:mb-8 flex items-start justify-between gap-4">
           <div className="flex items-start gap-3 flex-1 min-w-0">
