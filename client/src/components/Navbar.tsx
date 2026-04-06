@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../types/user";
 import { motion, AnimatePresence } from "framer-motion";

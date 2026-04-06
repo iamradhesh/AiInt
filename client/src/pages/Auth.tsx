@@ -1,4 +1,4 @@
-import React from "react";
+
 import type { FC } from "react";
 import { BsRobot } from "react-icons/bs";
 import { IoSparkles } from "react-icons/io5";

@@ -1,7 +1,6 @@
 import{
   FaUserTie,
-  FaBriefcase,
-  FaFileUpload,
+  
   FaMicrophoneAlt,
   FaChartLine
 } from 'react-icons/fa'

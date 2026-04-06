@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { FiMonitor, FiBriefcase, FiZap, FiChevronDown, FiCheck } from "react-icons/fi";
 
 const modes = [
