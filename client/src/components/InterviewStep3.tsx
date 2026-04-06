@@ -15,7 +15,7 @@ import QuestionRowSec from "./QuestionRowSec";
 
 interface InterviewStep3Props { report: InterviewReport | null; }
 interface QuestionItem { score?: number; question?: string; feedback?: string; answer?: string; }
-
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function scoreColor(s: number) {
@@ -58,7 +58,7 @@ const fadeUp = {
     transition: {
       delay: i * 0.07,
       duration: 0.4,
-      ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // ✅ FIX
+      ease: EASE, // ✅ FIXED
     },
   }),
 };
