@@ -847,31 +847,37 @@ const InterviewStep2: React.FC<InterviewStep2Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, phase]);
 
-  const buildReport = useCallback(
-    (savedAnswers: QuestionAnswer[]): InterviewReport => {
-      const answered = savedAnswers.filter(
-        (a) => a.answer.trim().length > 0,
-      ).length;
-      const total = questions.length;
-      const score = total > 0 ? Math.round((answered / total) * 100) : 0;
-      return {
-        score,
-        feedback:
-          answered === total
-            ? "Great job completing all questions!"
-            : `You answered ${answered} of ${total} questions.`,
-        strengths:
-          answered > 0
-            ? ["Attempted all provided questions", "Clear communication"]
-            : [],
-        improvements:
-          answered < total
-            ? ["Try to answer every question", "Manage your time per question"]
-            : ["Expand on technical depth", "Use specific examples"],
-      };
-    },
-    [questions],
-  );
+ const buildReport = useCallback((savedAnswers: QuestionAnswer[]): InterviewReport => {
+  const answered = savedAnswers.filter((a) => a.answer.trim().length > 0).length;
+  const total    = questions.length;
+  const score    = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+  const confidence    = Math.round(questions.reduce((s, q) => s + (q.confidence    ?? 0), 0) / (total || 1));
+  const communication = Math.round(questions.reduce((s, q) => s + (q.communication ?? 0), 0) / (total || 1));
+  const correctness   = Math.round(questions.reduce((s, q) => s + (q.correctness   ?? 0), 0) / (total || 1));
+  const finalScore    = Math.round(questions.reduce((s, q) => s + (q.score         ?? 0), 0) / (total || 1));
+
+  return {
+    score,
+    finalScore,
+    confidence,
+    communication,
+    correctness,
+    feedback:     answered === total
+      ? "Great job completing all questions!"
+      : `You answered ${answered} of ${total} questions.`,
+    strengths:    answered > 0
+      ? ["Attempted all provided questions", "Clear communication"]
+      : [],
+    improvements: answered < total
+      ? ["Try to answer every question", "Manage your time per question"]
+      : ["Expand on technical depth", "Use specific examples"],
+    questionwiesescore: questions.map((q) => ({
+      question: q.question,
+      score:    q.score ?? 0,
+    })),
+  };
+}, [questions]);
 
   const handleModeSwitch = (mode: InputMode) => {
     if (mode !== "voice" && isRecording) stopRecognition();
