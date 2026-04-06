@@ -10,7 +10,8 @@ import SkeletonCard  from "../components/Skeletoncard";
 import EmptyState    from "../components/Emptystate";
 import ErrorBanner   from "../components/Errorbanner";
 import SummaryStats  from "../components/Summarystats";
-import { ServerUrl } from "../App";
+
+const ServerUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:8000';
 
 
 

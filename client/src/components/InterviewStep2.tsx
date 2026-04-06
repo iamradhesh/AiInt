@@ -5,7 +5,7 @@ import maleVideo from "../assets/male-ai.mp4";
 import Timer from "./Timer";
 import type { InterviewSetup, InterviewReport } from "../types/Interview";
 import axios from "axios";
-import { ServerUrl } from "../App";
+const ServerUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:8000';
 
 // ─── Browser SpeechRecognition type augmentation ──────────────────────────────
 

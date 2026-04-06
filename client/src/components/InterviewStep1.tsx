@@ -6,7 +6,7 @@ import ModeSelect from "./ModeSelect";
 import ResumeUploader from "./ResumeUploader";
 import AnalyzeButton from "./AnalyzeButton";
 import axios from "axios";
-import { ServerUrl } from "../App";
+const ServerUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:8000';
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../types/user";
 import { setUserData } from "../redux/userSlice";

@@ -7,7 +7,7 @@ import { FaUserAstronaut } from "react-icons/fa";
 import { HiOutlineLogout, HiOutlineClipboardList } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ServerUrl } from "../App";
+const ServerUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:8000';
 import { setUserData } from "../redux/userSlice";
 import AuthModel from "./AuthModel";
 

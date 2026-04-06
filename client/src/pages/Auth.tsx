@@ -7,12 +7,13 @@ import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import type { UserCredential } from "firebase/auth";
 import { auth, provider } from "../utils/firebase";
-import { ServerUrl } from "../App";
+
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
+const ServerUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:8000';
 interface AuthProps {
   isModal?: boolean;
 }

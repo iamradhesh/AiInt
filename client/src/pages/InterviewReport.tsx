@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ServerUrl } from '../App';
-import InterviewStep3 from '../components/InterviewStep3';
 
+import InterviewStep3 from '../components/InterviewStep3';
+const ServerUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:8000';
 const InterviewReport = () => {
   const {id} = useParams();
 

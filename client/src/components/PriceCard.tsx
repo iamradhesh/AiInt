@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type { Plan } from "../types/Plan";
 import { Check } from "lucide-react";
 import axios from "axios";
-import { ServerUrl } from "../App";
+const ServerUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:8000';
 
 declare global {
   interface Window {
